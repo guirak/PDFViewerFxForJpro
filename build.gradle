@@ -1,22 +1,43 @@
-plugins {
-    id 'java'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath 'org.openjfx:javafx-plugin:0.0.10'
+    }
 }
 
-group 'FXPDFViewer'
-version '0.5'
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.openjfx.javafxplugin'
 
-sourceCompatibility = 1.8
 
-jar {
-}
+    group 'FXPDFViewer'
+    version '0.5'
 
-repositories {
-    mavenCentral()
-}
+    sourceCompatibility = 17
+    targetCompatibility = 17
 
-dependencies {
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    jar {
+    }
 
-    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    javafx {
+        version = "17.0.1"
+        modules = ['javafx.controls', 'javafx.web']
+    }
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+
+        testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+        testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    }
 }
