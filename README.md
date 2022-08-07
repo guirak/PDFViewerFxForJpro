@@ -51,7 +51,7 @@ dependencies {
 
 First, you have to import the necessary class:
 ```java
-import com.dansoftware.pdfdisplayer.PDFDisplayer;
+import com.dansoftware.PDFDisplayer;
 ```
 
 ```java
