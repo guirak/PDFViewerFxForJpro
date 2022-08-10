@@ -1,7 +1,5 @@
 import com.dansoftware.pdfdisplayer.PDFDisplayer;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,7 +25,7 @@ public class ProcessListenerDemo extends Application {
         PDFDisplayer pdfDisplayer = new PDFDisplayer();
         //set the process listener of it
 
-        pdfDisplayer.setOnLoaderTaskPresent(task -> {
+        pdfDisplayer.setOnLoaderTaskPresentProperty(task -> {
             task.setOnRunning((e) -> progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS));
             task.setOnSucceeded((e) -> progressBar.setProgress(0));
             task.setOnFailed((e) -> progressBar.setProgress(0));

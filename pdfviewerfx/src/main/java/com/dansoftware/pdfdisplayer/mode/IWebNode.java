@@ -2,6 +2,7 @@ package com.dansoftware.pdfdisplayer.mode;
 
 import javafx.scene.Parent;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
@@ -40,10 +41,11 @@ public interface IWebNode {
     Parent toNode();
 
     /**
-     * Load an url
-     * @param url Url to load
+     * Load the pdf viewer
+     * @param rootPath Url of the root directory of the PDF Viewer
+     * @param htmlViewerPath Path to the PDF Viewer HTML start file.
      */
-    void load(String url);
+    void loadPdfViewer(String rootPath, String htmlViewerPath) throws IOException;
 
     /**
      * Define a task to execyte when the runnable is loaded

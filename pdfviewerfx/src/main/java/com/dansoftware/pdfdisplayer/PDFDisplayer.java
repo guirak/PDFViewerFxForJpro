@@ -29,7 +29,7 @@ public class PDFDisplayer {
         return t;
     });
 
-    private final ObjectProperty<Consumer<Task<String>>> onLoaderTaskPresent =
+    private final ObjectProperty<Consumer<Task<String>>> onLoaderTaskPresentProperty =
             new SimpleObjectProperty<>();
 
     private final PdfJSVersion version;
@@ -77,12 +77,12 @@ public class PDFDisplayer {
         this(PdfJSVersion.latest(), url);
     }
 
-    public PDFDisplayer(PdfJSVersion version, InputStream inputStream) throws IOException {
+    public PDFDisplayer(PdfJSVersion version, InputStream inputStream){
         this(version);
         loadPDF(inputStream);
     }
 
-    public PDFDisplayer(InputStream inputStream) throws IOException {
+    public PDFDisplayer(InputStream inputStream){
         this(PdfJSVersion.latest(), inputStream);
     }
 
@@ -110,7 +110,7 @@ public class PDFDisplayer {
 
         Task<String> task = buildLoadingTask(inputStream);
 
-        final Consumer<Task<String>> onLoaderTaskPresent = this.onLoaderTaskPresent.get();
+        final Consumer<Task<String>> onLoaderTaskPresent = this.onLoaderTaskPresentProperty.get();
         if (onLoaderTaskPresent != null) {
             Platform.runLater(() -> onLoaderTaskPresent.accept(task));
         }
@@ -121,11 +121,11 @@ public class PDFDisplayer {
      * @deprecated Use {@link #loadPDF(InputStream)} instead
      */
     @Deprecated
-    public void displayPdf(InputStream inputStream) throws IOException {
+    public void displayPdf(final InputStream inputStream) {
         loadPDF(inputStream);
     }
 
-    private Task<String> buildLoadingTask(InputStream inputStream) {
+    private Task<String> buildLoadingTask(final InputStream inputStream) {
         final Task<String> task = new Task<String>() {
             @Override
             protected String call() throws Exception {
@@ -263,8 +263,11 @@ public class PDFDisplayer {
         final IWebNode webNode = mode.createWebNode();
 
         // Load the pdf viewer
-        final String url = getClass().getResource(version.getHome()).toExternalForm();
-        webNode.load(url);
+        try {
+            webNode.loadPdfViewer(version.getRootPath(), version.getHtmlViewer());
+        } catch (final IOException e) {
+            logger.error("Error while loading the PDF viewer : ", e);
+        }
 
         // Define a task to execute when the web content is successfully loaded
         webNode.setOnLoaded(() -> {
@@ -280,7 +283,7 @@ public class PDFDisplayer {
                 toExecuteWhenPDFJSLoaded = null;
                 webNode.setOnLoaded(null);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                logger.error("Error while executing scripts on PDF Viewer start : ", e);
             }
         });
 
@@ -299,15 +302,15 @@ public class PDFDisplayer {
         return webNode.toNode();
     }
 
-    public Consumer<Task<String>> getOnLoaderTaskPresent() {
-        return onLoaderTaskPresent.get();
+    public Consumer<Task<String>> getOnLoaderTaskPresentProperty() {
+        return onLoaderTaskPresentProperty.get();
     }
 
-    public void setOnLoaderTaskPresent(Consumer<Task<String>> onLoaderTaskPresent) {
-        this.onLoaderTaskPresent.set(onLoaderTaskPresent);
+    public void setOnLoaderTaskPresentProperty(Consumer<Task<String>> onLoaderTaskPresentProperty) {
+        this.onLoaderTaskPresentProperty.set(onLoaderTaskPresentProperty);
     }
 
     public ObjectProperty<Consumer<Task<String>>> onLoaderTaskPresentProperty() {
-        return onLoaderTaskPresent;
+        return onLoaderTaskPresentProperty;
     }
 }

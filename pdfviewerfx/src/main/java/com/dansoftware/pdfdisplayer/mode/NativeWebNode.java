@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -56,7 +57,9 @@ class NativeWebNode implements IWebNode {
     }
 
     @Override
-    public void load(final String url) {
+    public void loadPdfViewer(final String rootPath, final String htmlViewerPath) {
+        final String url = Objects.requireNonNull(getClass().getResource(rootPath + "/" + htmlViewerPath))
+                .toExternalForm();
         webView.getEngine().load(url);
     }
 

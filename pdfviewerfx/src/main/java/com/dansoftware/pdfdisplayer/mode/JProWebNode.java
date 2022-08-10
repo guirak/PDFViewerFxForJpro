@@ -3,14 +3,12 @@ package com.dansoftware.pdfdisplayer.mode;
 import com.jpro.webapi.HTMLView;
 import com.jpro.webapi.WebAPI;
 import javafx.scene.Parent;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,14 +23,14 @@ import java.util.function.Consumer;
 class JProWebNode implements IWebNode {
 
     /**
-     * Logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(JProWebNode.class);
-
-    /**
      * Id for the frame containing the viewer
      */
     static final String PDF_VIEWER_FRAME_ID = "pdfviewerFrame";
+
+    /**
+     * Logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(JProWebNode.class);
 
     /**
      * Executor to schedule scripts executions
@@ -99,22 +97,23 @@ class JProWebNode implements IWebNode {
         return htmlView;
     }
 
-    private void makePdfJsPublic(){
+    private void makePdfJsPublic() {
 
     }
 
     @Override
-    public void load(final String url) {
-        final String directoryUrl = StringUtils.removeEnd(url, "web/viewer.html");
+    public void loadPdfViewer(final String rootPath, final String htmlViewerPath) throws IOException {
         final ArrayList<URL> allFilesUrl = new ArrayList<>();
         try {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                    // TODO Search the file based on the url provided as parameter
                     Objects.requireNonNull(
-                            getClass().getResourceAsStream("/pdfjs_2.2.228/filesList.txt"))))) {
+                            getClass().getResourceAsStream(rootPath + "/filesList.txt"))))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    allFilesUrl.add(new URL(directoryUrl + line));
+                    final String strUrl = Objects.requireNonNull(
+                                    getClass().getResource(rootPath + "/" + line))
+                            .toExternalForm();
+                    allFilesUrl.add(new URL(strUrl));
                 }
             }
         } catch (IOException e) {
@@ -123,16 +122,15 @@ class JProWebNode implements IWebNode {
 
         WebAPI.getWebAPI(htmlView, webAPI -> {
             allFilesUrl.forEach(webAPI::createPublicFile);
-            try {
-                final String publicUrl = WebAPI.getWebAPI(htmlView.getScene()).createPublicFile(new URL(url));
-                final String content =
-                        "<iframe id=\""+ PDF_VIEWER_FRAME_ID + "\" frameborder=\"0\" style=\"width: 100%; height: 100%;\" src=\""
-                                + publicUrl
-                                + "\"> </iframe>";
-                htmlView.setContent(content);
-            } catch (MalformedURLException e) {
-                logger.error("Can't load the pdf viewer", e);
-            }
+
+            final URL htmlPageUrl = Objects.requireNonNull(
+                    getClass().getResource(rootPath + "/" + htmlViewerPath));
+            final String publicUrl = WebAPI.getWebAPI(htmlView.getScene()).createPublicFile(htmlPageUrl);
+            final String content =
+                    "<iframe id=\"" + PDF_VIEWER_FRAME_ID + "\" frameborder=\"0\" style=\"width: 100%; height: 100%;\" src=\""
+                            + publicUrl
+                            + "\"> </iframe>";
+            htmlView.setContent(content);
         });
 
         htmlView.setMinHeight(1200);
@@ -142,11 +140,11 @@ class JProWebNode implements IWebNode {
 
     @Override
     public void setOnLoaded(final Runnable onLoadedTask) {
-//        if (onLoadedTask != null) {
-//            onLoadedTask.run();
-//        }
         if (onLoadedTask != null) {
-            jproWebNodeExecutor.schedule(onLoadedTask,10, TimeUnit.SECONDS);
+            onLoadedTask.run();
         }
+//        if (onLoadedTask != null) {
+//            jproWebNodeExecutor.schedule(onLoadedTask, 10, TimeUnit.SECONDS);
+//        }
     }
 }

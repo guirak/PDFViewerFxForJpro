@@ -22,7 +22,7 @@ public class Demo extends Application {
         alertStage.setAlwaysOnTop(true);
         alertStage.show();
 
-        displayer.setOnLoaderTaskPresent(task -> {
+        displayer.setOnLoaderTaskPresentProperty(task -> {
             task.setOnRunning(e -> alertStage.show());
             task.setOnSucceeded(e -> alertStage.close());
             task.setOnFailed(e -> alertStage.close());
