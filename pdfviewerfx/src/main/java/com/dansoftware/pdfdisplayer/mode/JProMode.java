@@ -1,5 +1,8 @@
 package com.dansoftware.pdfdisplayer.mode;
 
+/**
+ * Provide the features for the JProMode
+ */
 class JProMode implements IMode{
 
     @Override

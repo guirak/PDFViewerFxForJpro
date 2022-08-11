@@ -16,7 +16,7 @@ import java.net.URL;
 public class JProDemo extends JProApplication {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        PDFDisplayer displayer = new PDFDisplayer(PdfJSVersion._2_2_228);
+        PDFDisplayer displayer = new PDFDisplayer(PdfJSVersion.V_2_2_228);
 
         Stage alertStage = new Stage();
         alertStage.setScene(new Scene(new StackPane(new Label("Processing"))));

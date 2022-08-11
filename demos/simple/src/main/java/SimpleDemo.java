@@ -22,8 +22,6 @@ public class SimpleDemo extends Application {
             displayer.setSecondaryToolbarToggleVisibility(visible = !visible);
         });
 
-        JSLogListener.setOutputStream(System.err);
-
         primaryStage.setScene(new Scene(new VBox(displayer.toNode(), btn)));
         primaryStage.show();
     }

@@ -1,20 +1,16 @@
 package com.dansoftware.pdfdisplayer.mode;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
-import java.io.OutputStream;
 
+@NoArgsConstructor
+@Slf4j
 public class JSLogListener {
-    private static OutputStream out = System.out;
-
-    JSLogListener(){
-    }
-
-    public void log(String message) throws IOException {
-        if (message != null && out != null)
-           out.write((message + "\n").getBytes());
-    }
-
-    public static void setOutputStream(OutputStream outputStream){
-        out = outputStream;
+    public void log(final String message) throws IOException {
+        if (message != null) {
+            log.error(message);
+        }
     }
 }

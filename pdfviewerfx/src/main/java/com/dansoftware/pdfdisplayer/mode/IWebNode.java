@@ -2,7 +2,6 @@ package com.dansoftware.pdfdisplayer.mode;
 
 import javafx.scene.Parent;
 
-import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
@@ -15,16 +14,14 @@ public interface IWebNode {
 
     /**
      * Executes JavaScript code in the currently hosting browser.
-     * @param code – The code to be executed.
+     * @param code           – The code to be executed.
      * @param resultConsumer - Consumer to execute when the request response has been received
-     * @return Result of the script execution
      */
     void executeScript(String code, Consumer<Object> resultConsumer);
 
     /**
      * Executes JavaScript code in the currently hosting browser.
      * @param code – The code to be executed.
-     * @return Result of the script execution
      */
     void executeScript(String code);
 
@@ -36,7 +33,7 @@ public interface IWebNode {
 
     /**
      * Load the pdf viewer
-     * @param rootPath Url of the root directory of the PDF Viewer
+     * @param rootPath       Url of the root directory of the PDF Viewer
      * @param htmlViewerPath Path to the PDF Viewer HTML start file.
      */
     void loadPdfViewer(String rootPath, String htmlViewerPath);

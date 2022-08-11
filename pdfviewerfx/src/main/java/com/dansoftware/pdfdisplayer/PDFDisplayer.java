@@ -259,31 +259,32 @@ public class PDFDisplayer {
      */
     private IWebNode createWebNode() {
         // Create the web node
-        final IWebNode webNode = mode.createWebNode();
+        final IWebNode newWebNode = mode.createWebNode();
 
         // Load the pdf viewer
-        webNode.loadPdfViewer(version.getRootPath(), version.getHtmlViewer());
+        newWebNode.loadPdfViewer(version.getRootPath(), version.getHtmlViewer());
 
         // Define a task to execute when the web content is successfully loaded
-        webNode.setOnLoaded(() -> {
+        newWebNode.setOnLoaded(() -> {
             try {
                 pdfJsLoaded = true;
 
                 if (loadScript != null) {
-                    logger.debug("PDF already loaded");
-                    webNode.executeScript(loadScript);
+                    logger.debug("PDF already loaded - Load " + loadScript);
+                    newWebNode.executeScript(loadScript);
                 }
 
-                webNode.executeScript(toExecuteWhenPDFJSLoaded);
+
+                newWebNode.executeScript(toExecuteWhenPDFJSLoaded);
                 toExecuteWhenPDFJSLoaded = null;
-                webNode.setOnLoaded(null);
+                newWebNode.setOnLoaded(null);
             } catch (Exception e) {
                 logger.error("Error while executing scripts on PDF Viewer start : ", e);
             }
         });
 
 
-        return webNode;
+        return newWebNode;
     }
 
     /**
