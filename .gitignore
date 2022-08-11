@@ -6,3 +6,4 @@
 /pdfviewerfx/build/
 /demos/build/
 /demos/*/build/
+/demos/*/logs/
