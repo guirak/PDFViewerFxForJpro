@@ -13,8 +13,8 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'org.openjfx.javafxplugin'
 
-    group 'FXPDFViewer'
-    version '0.5'
+    group 'PDFViewerFXForJpro'
+    version '1.0'
 
     sourceCompatibility = 17
     targetCompatibility = 17
@@ -45,7 +45,7 @@ allprojects {
 
         testCompileOnly 'org.projectlombok:lombok:1.18.24'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
-        testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-        testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+        testImplementation 'ch.qos.logback:logback-classic:1.2.11'
+        testImplementation 'ch.qos.logback:logback-core:1.2.11'
     }
 }
