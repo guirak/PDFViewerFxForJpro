@@ -29,12 +29,6 @@ public interface IWebNode {
     void executeScript(String code);
 
     /**
-     * Provide the code for accessing the pdfviewer document by script
-     * @return
-     */
-    String getDocumentFromScript();
-
-    /**
      * Provide the node to display the web content
      * @return Node to display the web content
      */
@@ -45,7 +39,7 @@ public interface IWebNode {
      * @param rootPath Url of the root directory of the PDF Viewer
      * @param htmlViewerPath Path to the PDF Viewer HTML start file.
      */
-    void loadPdfViewer(String rootPath, String htmlViewerPath) throws IOException;
+    void loadPdfViewer(String rootPath, String htmlViewerPath);
 
     /**
      * Define a task to execyte when the runnable is loaded

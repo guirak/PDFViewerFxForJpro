@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -43,6 +42,11 @@ class JProWebNode implements IWebNode {
     private final HTMLView htmlView = new HTMLView();
 
     /**
+     * Root path of the PDF Viewer
+     */
+    private String pdfViewerRootPath;
+
+    /**
      * Constructor
      */
     public JProWebNode() {
@@ -57,17 +61,20 @@ class JProWebNode implements IWebNode {
      */
     private void internalExecuteScript(final WebAPI webAPI, final String code, final Consumer<Object> resultConsumer) {
         jproWebNodeExecutor.execute(() -> {
-            System.out.println("Executing code : " + code);
-            final String result;
             try {
+                System.out.println("Making public before executing script : " + code);
+                makePdfJsPublic(webAPI);
+
+                System.out.println("Executing code : " + code);
+                final String result;
+
                 result = webAPI.executeScriptWithReturn(code);
                 System.out.println("  >> Result = " + result);
                 if (resultConsumer != null) {
                     resultConsumer.accept(result);
                 }
             } catch (final Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
+                logger.error("Can't execute script : ", e);
             }
         });
     }
@@ -88,49 +95,60 @@ class JProWebNode implements IWebNode {
     }
 
     @Override
-    public String getDocumentFromScript() {
-        return "document.getElementById('" + PDF_VIEWER_FRAME_ID + "').contentDocument";
-    }
-
-    @Override
     public Parent toNode() {
         return htmlView;
     }
 
-    private void makePdfJsPublic() {
+    /**
+     * Make all the files for pdf JS public
+     * @param webAPI JPRO Web API
+     */
+    private void makePdfJsPublic(final WebAPI webAPI) throws IOException {
+        System.out.println("makePdfJsPublic : Making PDF JS public");
+        final ArrayList<URL> allFilesUrl = new ArrayList<>();
 
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(
+                        getClass().getResourceAsStream(pdfViewerRootPath + "/filesList.txt"))))) {
+            System.out.println("Test 1 ");
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println("Test 2 ");
+                final String strUrl = Objects.requireNonNull(
+                                getClass().getResource(pdfViewerRootPath + "/" + line))
+                        .toExternalForm();
+                System.out.println("Test 3 ");
+                allFilesUrl.add(new URL(strUrl));
+                System.out.println("Test 4 ");
+            }
+        }
+        System.out.println("Test 5 ");
+        allFilesUrl.forEach(webAPI::createPublicFile);
+        System.out.println("Test 6 ");
     }
 
     @Override
-    public void loadPdfViewer(final String rootPath, final String htmlViewerPath) throws IOException {
-        final ArrayList<URL> allFilesUrl = new ArrayList<>();
-        try {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                    Objects.requireNonNull(
-                            getClass().getResourceAsStream(rootPath + "/filesList.txt"))))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    final String strUrl = Objects.requireNonNull(
-                                    getClass().getResource(rootPath + "/" + line))
-                            .toExternalForm();
-                    allFilesUrl.add(new URL(strUrl));
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Can't load the pdf viewer", e);
-        }
+    public void loadPdfViewer(final String rootPath, final String htmlViewerPath) {
+        pdfViewerRootPath = rootPath;
 
         WebAPI.getWebAPI(htmlView, webAPI -> {
-            allFilesUrl.forEach(webAPI::createPublicFile);
+            try {
+                makePdfJsPublic(webAPI);
 
-            final URL htmlPageUrl = Objects.requireNonNull(
-                    getClass().getResource(rootPath + "/" + htmlViewerPath));
-            final String publicUrl = WebAPI.getWebAPI(htmlView.getScene()).createPublicFile(htmlPageUrl);
-            final String content =
-                    "<iframe id=\"" + PDF_VIEWER_FRAME_ID + "\" frameborder=\"0\" style=\"width: 100%; height: 100%;\" src=\""
-                            + publicUrl
-                            + "\"> </iframe>";
-            htmlView.setContent(content);
+                System.out.println("PDF JS has been put public");
+
+                final URL htmlPageUrl = Objects.requireNonNull(
+                        getClass().getResource(rootPath + "/" + htmlViewerPath));
+                final String publicUrl = WebAPI.getWebAPI(htmlView.getScene()).createPublicFile(htmlPageUrl);
+                final String content =
+                        "<iframe id=\"" + PDF_VIEWER_FRAME_ID + "\" frameborder=\"0\" style=\"width: 100%; height: 100%;\" src=\""
+                                + publicUrl
+                                + "\"> </iframe>";
+                htmlView.setContent(content);
+            } catch (final IOException e) {
+                logger.error("Can't load the pdf viewer : ", e);
+            }
+
         });
 
         htmlView.setMinHeight(1200);

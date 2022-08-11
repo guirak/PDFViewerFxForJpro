@@ -47,11 +47,6 @@ class NativeWebNode implements IWebNode {
     }
 
     @Override
-    public String getDocumentFromScript() {
-        return "document";
-    }
-
-    @Override
     public Parent toNode() {
         return webView;
     }

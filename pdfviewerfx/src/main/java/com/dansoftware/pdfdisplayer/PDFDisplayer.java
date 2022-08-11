@@ -34,22 +34,21 @@ public class PDFDisplayer {
 
     private final PdfJSVersion version;
 
+    /**
+     * The current mode of the app
+     */
+    private final IMode mode = ModeFactory.create();
+
     private boolean pdfJsLoaded;
 
     private String loadScript;
 
     private String toExecuteWhenPDFJSLoaded = "";
 
-
     /**
      * Node containing the web content
      */
     private IWebNode webNode;
-
-    /**
-     * The current mode of the app
-     */
-    private final IMode mode = ModeFactory.create();
 
     public PDFDisplayer(final PdfJSVersion version) {
         this.version = version;
@@ -77,12 +76,12 @@ public class PDFDisplayer {
         this(PdfJSVersion.latest(), url);
     }
 
-    public PDFDisplayer(PdfJSVersion version, InputStream inputStream){
+    public PDFDisplayer(PdfJSVersion version, InputStream inputStream) {
         this(version);
         loadPDF(inputStream);
     }
 
-    public PDFDisplayer(InputStream inputStream){
+    public PDFDisplayer(InputStream inputStream) {
         this(PdfJSVersion.latest(), inputStream);
     }
 
@@ -263,11 +262,7 @@ public class PDFDisplayer {
         final IWebNode webNode = mode.createWebNode();
 
         // Load the pdf viewer
-        try {
-            webNode.loadPdfViewer(version.getRootPath(), version.getHtmlViewer());
-        } catch (final IOException e) {
-            logger.error("Error while loading the PDF viewer : ", e);
-        }
+        webNode.loadPdfViewer(version.getRootPath(), version.getHtmlViewer());
 
         // Define a task to execute when the web content is successfully loaded
         webNode.setOnLoaded(() -> {
