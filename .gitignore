@@ -3,3 +3,6 @@
 /build
 *pdfjs_OLD
 *.log
+/pdfviewerfx/build/
+/demos/build/
+/demos/*/build/
