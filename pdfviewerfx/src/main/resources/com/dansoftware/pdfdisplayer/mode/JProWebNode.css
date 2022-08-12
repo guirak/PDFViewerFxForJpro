@@ -1,0 +1,15 @@
+.loadingPane{
+    -fx-background-color: #3d3d3d;
+    -fx-alignment: center;
+    -fx-spacing: 1em;
+}
+
+.loadingPane .label{
+    -fx-font-size: 2em;
+    -fx-text-fill: white;
+}
+
+.loadingPane .progress-bar{
+    -fx-pref-height: 0.8em;
+    -fx-pref-width: 15em;
+}

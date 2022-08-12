@@ -1,13 +1,19 @@
-# PDFViewerFX
+# PDFViewerFxForJPRO
 
-[![](https://jitpack.io/v/Dansoftowner/PDFViewerFX.svg)](https://jitpack.io/#Dansoftowner/PDFViewerFX)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Dansoftowner/PDFViewerFX)](https://github.com/Dansoftowner/PDFViewerFX/commits/master)
-[![GitHub issues](https://img.shields.io/github/issues/Dansoftowner/PDFViewerFX)](https://github.com/Dansoftowner/PDFViewerFX/issues)
-[![GitHub](https://img.shields.io/github/license/Dansoftowner/PDFViewerFX)](LICENSE)
+[![](https://jitpack.io/v/guirak/PDFViewerFxForJpro.svg)](https://jitpack.io/#guirak/PDFViewerFxForJpro)
+[![GitHub last commit](https://img.shields.io/github/last-commit/guirak/PDFViewerFxForJpro)](https://github.com/guirak/PDFViewerFxForJpro/commits/master)
+[![GitHub issues](https://img.shields.io/github/issues/guirak/PDFViewerFxForJpro)](https://github.com/guirak/PDFViewerFxForJpro/issues)
+[![GitHub](https://img.shields.io/github/license/guirak/PDFViewerFxForJpro)](LICENSE)
 
 #### A library for displaying/viewing pdf documents inside your javaFX application
-This library is actually a javaFX wrapper for Mozilla's [PDF.js](https://github.com/mozilla/pdf.js/) javascript library, but with this library you don't have to
+This library is actually a JavaFX wrapper for Mozilla's [PDF.js](https://github.com/mozilla/pdf.js/) javascript library, but with this library you don't have to
 deal with any javascript code, so you can just use a java object to view pdf documents in javaFX. 
+
+The library is a fork of the [Dansoftowner/PDFViewerFX](https://github.com/Dansoftowner/PDFViewerFX) that provides additional features to be compatible with JPRO.
+
+When running your app as Native app, the library will use the JavaFX [WebView](https://openjfx.io/javadoc/17/javafx.web/javafx/scene/web/WebView.html) to display [PDF.js](https://github.com/mozilla/pdf.js/).
+
+When running your app on a JPRO server, the library will use the JPRO [HtmlView](https://www.jpro.one/api/2022.1.3/com/jpro/webapi/HTMLView.html) to display [PDF.js](https://github.com/mozilla/pdf.js/).
 
 ## How to get it?
 
@@ -26,9 +32,9 @@ Releases are available through [JitPack](https://jitpack.io/#Dansoftowner/PDFVie
 
 ```xml
 <dependency>
-    <groupId>com.github.Dansoftowner</groupId>
-    <artifactId>PDFViewerFX</artifactId>
-    <version>0.8</version>
+    <groupId>com.github.guirak</groupId>
+    <artifactId>PDFViewerFxForJpro</artifactId>
+    <version>1.0</version>
 </dependency>
 ```  
 
@@ -43,15 +49,43 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.Dansoftowner:PDFViewerFX:0.8'
+    implementation 'com.github.guirak:PDFViewerFxForJpro:1.0'
 }
 ```
 
-## Usage
+## Configuring for JPRO
+
+The PDF Viewer use an integrated Apache PDF.js.
+
+To be accessible with JPRO, the used PDF.js must be copied into the **jpro/html folder**. 
+
+For example, if you want to use the version **2.2.228**, you must copy the **pdfjs_2.2.228** from this git repository into a folder **jpro/html/pdfjs/** of you JPRO project. 
+
+The project structure will look like this :
+
+```
+project
+│    README.md
+│    file001.txt    
+│
+└─── src
+│    └─── main
+│    │    └─── java
+│    │    └─── resources
+│    │    │    └─── jpro/html
+│    │    │    │    │    index.html
+│    │    │    │    └─── pdfjs
+│    │    │    │    │    └─── pdfjs_2.2.228
+
+```
+
+The demo project **demos/jpro** is a good example of how to use the PDF viewer with JPRO.
+
+## Implementation
 
 First, you have to import the necessary class:
 ```java
-import com.dansoftware.pdfdisplayer.PDFDisplayer;
+import com.dansoftware.PDFDisplayer;
 ```
 
 ```java
@@ -89,18 +123,20 @@ PDFDisplayer(File); //reads the data from the File
 PDFDisplayer(InputStream) //reads the data from the InputStream 
 ```
 
-## More operations, tutorials
-If you want to deal with some other useful functions from this library, just go to the [wiki](https://github.com/Dansoftowner/PDFViewerFX/wiki) page! 
 
-## Projects using `PDFViewerFX`
+## Projects using `PDFViewerFxForJPRO`
 If this library is used by your project, let me know in the `Discussions` and I will mention that in this section.
 
 * [Document Archiver](https://github.com/Document-Archiver/com.sophisticatedapps.archiving.document-archiver) - Archive all your documents in a consistent way, which enables you to retrieve them later fast and easy.
 
-## Screenshots
+## Screenshots (Native app)
 
 ![alt text](screenshots/1.jpg)
 
 ![alt text](screenshots/2.jpg)
 
 ![alt text](screenshots/3.jpg)
+
+## Screenshots (JPRO app)
+
+![alt text](screenshots/jpro1.png)

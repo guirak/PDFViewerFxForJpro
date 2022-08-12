@@ -1,2 +1,9 @@
 rootProject.name = 'fxpdf'
 
+include 'demos:basic'
+include 'demos:pagenavigation'
+include 'demos:processlistener'
+include 'demos:simple'
+include 'demos:jpro'
+include 'pdfviewerfx'
+

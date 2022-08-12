@@ -1,22 +1,51 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath 'org.openjfx:javafx-plugin:0.0.10'
+    }
 }
 
-group 'FXPDFViewer'
-version '0.5'
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.openjfx.javafxplugin'
 
-sourceCompatibility = 1.8
+    group 'com.github.guirak'
+    version '1.0'
 
-jar {
-}
+    sourceCompatibility = 17
+    targetCompatibility = 17
 
-repositories {
-    mavenCentral()
-}
+    jar {
+    }
 
-dependencies {
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    javafx {
+        version = "17.0.1"
+        modules = ['javafx.controls', 'javafx.web']
+    }
 
-    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://sandec.jfrog.io/artifactory/repo"
+        }
+    }
+
+    dependencies {
+        implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
+        implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
+        implementation 'org.apache.commons:commons-lang3:3.12.0'
+        implementation 'com.sandec.jpro:jpro-webapi:2022.1.3'
+        compileOnly 'org.projectlombok:lombok:1.18.24'
+        annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.24'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+        testImplementation 'ch.qos.logback:logback-classic:1.2.11'
+        testImplementation 'ch.qos.logback:logback-core:1.2.11'
+    }
 }

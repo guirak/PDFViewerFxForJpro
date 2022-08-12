@@ -1,0 +1,47 @@
+/**
+ ******************  Script Configuration ******************
+ */
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+
+        maven {
+            url "https://sandec.jfrog.io/artifactory/repo"
+        }
+    }
+
+    dependencies {
+        classpath 'com.sandec.jpro:jpro-plugin-gradle:2022.1.3'
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    maven {
+        url "https://sandec.jfrog.io/artifactory/repo"
+    }
+}
+
+apply plugin: 'com.sandec.jpro'
+
+dependencies {
+    implementation project(':pdfviewerfx')
+}
+
+
+jpro {
+    // for debugging
+//    JVMArgs << '-agentlib:jdwp=transport=dt_socket,server=n,address=5006,suspend=y'
+    JVMArgs << '-Xmx1000m'
+
+    //jpro server port
+    port = 8080
+}
+
+mainClassName = 'JProDemo'

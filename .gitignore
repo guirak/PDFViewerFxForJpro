@@ -3,3 +3,9 @@
 /build
 *pdfjs_OLD
 *.log
+/pdfviewerfx/build/
+/demos/build/
+/demos/*/build/
+/demos/*/logs/
+/.attach_pid*
+/demos/jpro/RUNNING_PID
